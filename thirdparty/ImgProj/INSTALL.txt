@@ -1,0 +1,23 @@
+PREREQUISITES
+=============
+The following software must be installed on the system:
+- some C++ compiler suite
+- png++ (http://www.nongnu.org/pngpp/) or (sudo apt-get install libpng++-dev)
+- boost (the development packages)
+- boost_algorithm
+- boost_filesystem
+- boost_regex
+
+
+COMPILATION: Linux
+==================
+In case you have CMake installed, the following two commands should generate a static library:
+  cmake .
+  make
+If you do not have CMake, you have to generate your own Makefile
+
+COMPILATION: Windows
+====================
+I did not try this, but in theory CMake can generate a VisualStudio project file, which should then compile.
+
+
