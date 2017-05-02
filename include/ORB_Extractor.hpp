@@ -17,7 +17,7 @@ namespace navi_vision {
   class ORB_Extractor{
   public:
 
-    float levelScaleFactor = 1.3;
+    float levelScaleFactor = 1.3f;
     int maxPyramidLevel = 8;
 
 
