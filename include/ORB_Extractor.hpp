@@ -16,10 +16,25 @@ namespace navi_vision {
   */
   class ORB_Extractor{
   public:
-
+    ORB* orb;
+    // scale factor
     float levelScaleFactor = 1.3f;
-    int maxPyramidLevel = 8;
 
+    // max pyramid level
+    unsigned int maxPyramidLevel = 8;
+
+    // scale factor for each level
+    std::vector<unsigned int> uivScaleFactorLevel;
+
+    /*
+      image in each pyramid level
+    */
+    std::vector<cv::Mat> mvImagePyramid;
+
+    /*
+      this is max of u for each v
+    */
+    std::vector<int> umax;
 
     ORB_Extractor();
 

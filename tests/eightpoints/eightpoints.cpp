@@ -27,18 +27,19 @@ int main(int argc, char const *argv[]) {
   ORB_Extractor extractor;
   extractor.extractFeature(im,kpvvAllKeyPoints,descriptors);
 
-  std::cout << kpvvAllKeyPoints.size() << '\n';
   for (std::vector<std::vector<KeyPoint> >::iterator it = kpvvAllKeyPoints.begin();it != kpvvAllKeyPoints.end();++it){
     Mat disp = im.clone();
     for(std::vector<KeyPoint>::iterator kit = it->begin();kit != it->end();++kit)
     {
       rectangle( disp, kit->pt, Point(kit->pt.x + 10,kit->pt.y + 10), Scalar(255,0,0), 2, 8, 0 );
-      std::cout << kit->pt.x << '\n';
-      std::cout << kit->pt.y << '\n';
+      // std::cout << kit->pt.x << '\n';
+      // std::cout << kit->pt.y << '\n';
     }
     imshow("output",disp);
     waitKey(0);
   }
+
+
 
   return 0;
 }
