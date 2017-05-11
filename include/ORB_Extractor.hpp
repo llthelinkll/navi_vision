@@ -36,6 +36,11 @@ namespace navi_vision {
     */
     std::vector<int> umax;
 
+    /*
+      Pattern for Descriptor creater
+    */
+    std::vector<cv::Point> pattern;
+
     ORB_Extractor();
 
     /*
