@@ -15,6 +15,8 @@ namespace navi_vision {
     image feature extractor class
   */
   class ORB_Extractor{
+  private:
+    int window_size = 30;
   public:
     ORB* orb;
     // scale factor

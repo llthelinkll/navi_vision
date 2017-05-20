@@ -390,9 +390,8 @@ ORB_Extractor::extractFeature(Mat& im,std::vector<std::vector<KeyPoint> >& kpv,O
   Mat descriptors;
   _descriptors.create(100, 32, CV_8U);
 
-  // we have to split in to windown before pass to FAST because of core dumped for large image
+  // we have to split in to windows before pass to FAST because of core dumped for large image
   // we can adapt threshold for each window(cell)
-  int w = 30;
   int imMaxX = im.cols;
   int imMaxY = im.rows;
 
@@ -406,17 +405,17 @@ ORB_Extractor::extractFeature(Mat& im,std::vector<std::vector<KeyPoint> >& kpv,O
     }
     int maxX = (float) dst.cols /  scale;
     int maxY = (float) dst.rows / scale;
-    int nx = maxX/w;
-    int ny = maxY/w;
+    int nx = maxX/window_size;
+    int ny = maxY/window_size;
     resize(dst, dst, Size(maxX,maxY), 0, 0, INTER_LINEAR);
     for(int x = 0;x<nx;++x)
     {
       for(int y=0;y<ny;++y)
       {
-        int startX = x*w;
-        int endX = (x+1)*w;
-        int startY = y*w;
-        int endY = (y+1)*w;
+        int startX = x*window_size;
+        int endX = (x+1)*window_size;
+        int startY = y*window_size;
+        int endY = (y+1)*window_size;
         if (endX > im.cols-1)
         {
           endX = im.cols-1;
