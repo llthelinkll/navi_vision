@@ -27,6 +27,7 @@ int main(int argc, char const *argv[]) {
   ORB_Extractor extractor;
   extractor.extractFeature(im,kpvvAllKeyPoints,descriptors);
 
+  // std::cout << descriptors << '\n';
 
   for (std::vector<std::vector<KeyPoint> >::iterator it = kpvvAllKeyPoints.begin();it != kpvvAllKeyPoints.end();++it){
     Mat disp = im.clone();

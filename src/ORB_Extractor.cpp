@@ -389,6 +389,7 @@ ORB_Extractor::extractFeature(Mat& im,std::vector<std::vector<KeyPoint> >& kpv,O
 
   Mat descriptors;
   _descriptors.create(100, 32, CV_8U);
+  descriptors = _descriptors.getMat();
 
   // we have to split in to windows before pass to FAST because of core dumped for large image
   // we can adapt threshold for each window(cell)
@@ -396,10 +397,10 @@ ORB_Extractor::extractFeature(Mat& im,std::vector<std::vector<KeyPoint> >& kpv,O
   int imMaxY = im.rows;
 
   Mat dst = im ;
-  for(int i=0;i<maxPyramidLevel;++i)
+  for(int level=0;level<maxPyramidLevel;++level)
   {
     float scale = levelScaleFactor;
-    if(i ==0)
+    if(level ==0)
     {
       scale = 1;
     }
@@ -428,6 +429,7 @@ ORB_Extractor::extractFeature(Mat& im,std::vector<std::vector<KeyPoint> >& kpv,O
         FAST(dst.colRange(startX,endX).rowRange(startY,endY),tempV,28,true);
         // set real position to image
 
+        unsigned int keypointIndex=0;
         for(std::vector<KeyPoint>::iterator it = tempV.begin();it != tempV.end();++it)
         {
           // be aware about keypoint that close to bounder
@@ -435,15 +437,26 @@ ORB_Extractor::extractFeature(Mat& im,std::vector<std::vector<KeyPoint> >& kpv,O
           {
             it->pt.x += startX;
             it->pt.y += startY;
-            it->pt.x *= pow(levelScaleFactor,i);
-            it->pt.y *= pow(levelScaleFactor,i);
-            it->size *= uivScaleFactorLevel[i];
-            it->octave = i;
+            it->pt.x *= pow(levelScaleFactor,level);
+            it->pt.y *= pow(levelScaleFactor,level);
+            it->size *= uivScaleFactorLevel[level];
+            it->octave = level;
             it->angle = IC_Angle(im,it->pt,umax);
-            kpv[i].push_back(*it);
+            kpv[level].push_back(*it);
+
+            // Compute the descriptors
+            Mat desc = descriptors.rowRange(level, level + tempV.size());
+            navi_vision::computeOrbDescriptor(*it,dst,&pattern[0],desc.ptr((int)keypointIndex));
+            keypointIndex++;
           }
 
         }
+
+        // // TODO: extract descriptors
+        // Mat workingMat = dst.clone();
+        // GaussianBlur(workingMat, workingMat, Size(7, 7), 2, 2, BORDER_REFLECT_101);
+
+
 
       }
     }
