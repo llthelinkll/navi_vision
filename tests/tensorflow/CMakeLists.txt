@@ -4,6 +4,8 @@ project (orb_test)
 set(PROJECT_DIR ../..)
 find_package( OpenCV REQUIRED )
 
+set (CMAKE_CXX_STANDARD 11)
+
 include_directories(
   ${PROJECT_DIR}/include
 )

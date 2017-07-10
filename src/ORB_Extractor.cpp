@@ -399,24 +399,36 @@ ORB_Extractor::extractFeature(Mat& im,std::vector<std::vector<KeyPoint> >& kpv,O
   Mat dst = im ;
   for(int level=0;level<maxPyramidLevel;++level)
   {
+    // set level scale factor
     float scale = levelScaleFactor;
     if(level ==0)
     {
       scale = 1;
     }
+    // find new image size (maxX,maxY) from previous one by scale factor
     int maxX = (float) dst.cols /  scale;
     int maxY = (float) dst.rows / scale;
+
+    // window size is a static parameter which tell you to find descriptors and features inside
+    // nx and ny are the number of window in each row/column you have to do an iterator
     int nx = maxX/window_size;
     int ny = maxY/window_size;
+
+    // resize image to new image from maxX and maxY
     resize(dst, dst, Size(maxX,maxY), 0, 0, INTER_LINEAR);
+
+    // do iterator in each window (find descriptors and features)
     for(int x = 0;x<nx;++x)
     {
       for(int y=0;y<ny;++y)
       {
+        // initial position for x and y (start to end in each window)
         int startX = x*window_size;
         int endX = (x+1)*window_size;
         int startY = y*window_size;
         int endY = (y+1)*window_size;
+
+        // when the end position of window from iterator is over bounder of image
         if (endX > im.cols-1)
         {
           endX = im.cols-1;
@@ -425,29 +437,39 @@ ORB_Extractor::extractFeature(Mat& im,std::vector<std::vector<KeyPoint> >& kpv,O
         {
           endY = im.rows-1;
         }
+
+        // find keypoints from window and save into tempV
+        // void FAST(InputArray image, vector<KeyPoint>& keypoints, int threshold, bool nonmaxSuppression=true )
         std::vector<KeyPoint> tempV;
         FAST(dst.colRange(startX,endX).rowRange(startY,endY),tempV,28,true);
-        // set real position to image
+
 
         unsigned int keypointIndex=0;
+
+        // do iterator in each keypoint
         for(std::vector<KeyPoint>::iterator it = tempV.begin();it != tempV.end();++it)
         {
           // be aware about keypoint that close to bounder
           if(it->pt.x <= imMaxX - HALF_PATCH_SIZE && it->pt.y <= imMaxY - HALF_PATCH_SIZE && it->pt.y >= HALF_PATCH_SIZE && it->pt.x >= HALF_PATCH_SIZE)
           {
+            // set real position on image to keypoint
             it->pt.x += startX;
             it->pt.y += startY;
             it->pt.x *= pow(levelScaleFactor,level);
             it->pt.y *= pow(levelScaleFactor,level);
             it->size *= uivScaleFactorLevel[level];
+            // set level into keypoint for ...
             it->octave = level;
+            // set angle into keypoint for ...
             it->angle = IC_Angle(im,it->pt,umax);
+            // push keypoint into kpv (output of this function)
             kpv[level].push_back(*it);
 
             // Compute the descriptors
-            Mat desc = descriptors.rowRange(level, level + tempV.size());
-            navi_vision::computeOrbDescriptor(*it,dst,&pattern[0],desc.ptr((int)keypointIndex));
-            keypointIndex++;
+            // TODO
+            // Mat desc = descriptors.rowRange(level, level + tempV.size());
+            // navi_vision::computeOrbDescriptor(*it,dst,&pattern[0],desc.ptr((int)keypointIndex));
+            // keypointIndex++;
           }
 
         }
