@@ -26,9 +26,10 @@ int main(int argc, char const *argv[]) {
   // extract descriptors and keypoints from image
   Mat descriptors;
   ORB_Extractor extractor;
+  // TODO use only keypoint vector (not keypoint vector vector)
   extractor.extractFeature(im,kpvvAllKeyPoints,descriptors);
 
-  std::cout << descriptors << '\n';
+  // std::cout << descriptors << '\n';
 
   for (std::vector<std::vector<KeyPoint> >::iterator it = kpvvAllKeyPoints.begin();it != kpvvAllKeyPoints.end();++it){
     Mat disp = im.clone();

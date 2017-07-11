@@ -388,6 +388,9 @@ ORB_Extractor::extractFeature(Mat& im,std::vector<std::vector<KeyPoint> >& kpv,O
 {
 
   Mat descriptors;
+  // TODO create descriptors from keypoint number (all (include every level))
+  // NOTE: the reason we can't keep descriptor in keypoint because KeyPoint class doesn't have descriptor parameter
+  // _descriptors.create(nkeypoints, 32, CV_8U);
   _descriptors.create(100, 32, CV_8U);
   descriptors = _descriptors.getMat();
 
@@ -396,6 +399,7 @@ ORB_Extractor::extractFeature(Mat& im,std::vector<std::vector<KeyPoint> >& kpv,O
   int imMaxX = im.cols;
   int imMaxY = im.rows;
 
+  KeyPoint k;
   Mat dst = im ;
   for(int level=0;level<maxPyramidLevel;++level)
   {
@@ -467,7 +471,11 @@ ORB_Extractor::extractFeature(Mat& im,std::vector<std::vector<KeyPoint> >& kpv,O
 
             // Compute the descriptors
             // TODO
-            // Mat desc = descriptors.rowRange(level, level + tempV.size());
+            Mat desc = descriptors.rowRange(level, level + tempV.size());
+            std::cout << "cols rows" << '\n';
+            std::cout << desc.rows << '\n';
+            std::cout << desc.cols << '\n';
+            imshow("desp",desc);
             // navi_vision::computeOrbDescriptor(*it,dst,&pattern[0],desc.ptr((int)keypointIndex));
             // keypointIndex++;
           }
