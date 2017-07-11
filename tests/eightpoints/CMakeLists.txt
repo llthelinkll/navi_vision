@@ -16,5 +16,9 @@ target_link_libraries(${PROJECT_NAME}
   ${OpenCV_LIBS}
 )
 
+target_compile_options(${PROJECT_NAME} PUBLIC
+  -g
+)
+
 add_executable(kiti eightpoints.cpp)
 target_link_libraries(kiti ${PROJECT_NAME})
